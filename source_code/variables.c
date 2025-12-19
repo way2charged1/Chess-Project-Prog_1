@@ -17,5 +17,6 @@
   char inputmove[100];
   char eatenpiece;
   char promotionpiece;
+  int undoCount=0;
   game history[1000];
   game current;

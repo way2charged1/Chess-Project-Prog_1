@@ -3,6 +3,7 @@
   extern char inputmove[100];
   extern char eatenpiece;
   extern char promotionpiece;
+  extern int undoCount;
   typedef struct{
     char board[8][8];
     int movesplayed;
@@ -12,6 +13,7 @@
     char blackeaten[16];
     int whitewin;
     int blackwin;
+    int enpassCol;
   } game;
   extern game history[1000];
   extern game current;

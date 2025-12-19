@@ -24,12 +24,12 @@ void printBoard(char board[8][8]){
         if(i == 1){
             printf(" %d ", 8-i); 
             printf("\t\tWhite taken out:"); 
-            for(int r=0;r<whiteeatencount;r++){if(r==whiteeatencount-1){printf("%s", piecechangeforprint(whiteeaten[r]));} else{printf("%s, ", piecechangeforprint(whiteeaten[r]));}}
+            for(int r=0;r<current.whiteeatencount;r++){if(r==current.whiteeatencount-1){printf("%s", piecechangeforprint(current.whiteeaten[r]));} else{printf("%s, ", piecechangeforprint(current.whiteeaten[r]));}}
             printf("\n  +---+---+---+---+---+---+---+---+\n");}
         else if(i == 2){
             printf(" %d", 8-i); 
             printf("\t\tBlack taken out:");  
-            for(int s=0;s<blackeatencount;s++){if(s==blackeatencount-1){printf("%s", piecechangeforprint(blackeaten[s]));} else{printf("%s, ", piecechangeforprint(blackeaten[s]));}}
+            for(int s=0;s<current.blackeatencount;s++){if(s==current.blackeatencount-1){printf("%s", piecechangeforprint(current.blackeaten[s]));} else{printf("%s, ", piecechangeforprint(current.blackeaten[s]));}}
             printf("\n  +---+---+---+---+---+---+---+---+\n");}
         else if(i == 0){printf(" %d", 8-i);
             printf("\t\t"); sidenote();
@@ -62,12 +62,12 @@ void initposition(char board[8][8]){
 
 void eatenpieces(int eatenpiece){
     if(iswhite(eatenpiece)){
-        whiteeaten[whiteeatencount] = eatenpiece;
-        whiteeatencount++;
+        current.whiteeaten[current.whiteeatencount] = eatenpiece;
+        current.whiteeatencount++;
     }
     else if(isblack(eatenpiece)){
-       blackeaten[blackeatencount] = eatenpiece;
-        blackeatencount++;
+       current.blackeaten[current.blackeatencount] = eatenpiece;
+        current.blackeatencount++;
     }
 }
 

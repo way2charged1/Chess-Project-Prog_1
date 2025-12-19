@@ -18,11 +18,11 @@ int main(){
     SetConsoleOutputCP(65001);
     #endif
    srand(time(NULL));
-   char board[8][8];
-   initposition(board);
-   printBoard(board);
-   while(!endgame(board)){
-   movement(board);}
+   initposition(current.board);
+   history[0] = current;
+   printBoard(current.board);
+   while(!endgame(current.board)){
+   movement(current.board);}
 
     return 0;
 }

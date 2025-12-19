@@ -15,10 +15,10 @@
 
 
 void movement(char board[8][8]){
-    if(check(board, movesplayed)){printf("Check!\n");}
+    if(check(board, current.movesplayed)){printf("Check!\n");}
     char c1, c2;
     int r1, r2;
-      if(turn(movesplayed)==0){
+      if(turn(current.movesplayed)==0){
        printf("White's move:");
     }
     else{
@@ -28,16 +28,38 @@ void movement(char board[8][8]){
     fgets(inputmove, 80, stdin);
     if (strchr(inputmove, '\n') == NULL){clearinputbuffer();}
     cleaninput(inputmove);
+
     if(strcmp(inputmove, "UNDO") == 0){
+        if(current.movesplayed > 0){
         undo();
         printBoard(current.board);
+        undoCount++;
+        }
+        else{
+            printf("nothing to undo\n\n");
+        }
+        return;
     }
-    if(strcmp(inputmove, "SAVE") == 0)Save();
+
+    if(strcmp(inputmove, "REDO") == 0){
+        if(undoCount > 0){
+            redo();
+            printBoard(current.board);
+            undoCount--;
+        } else {
+            printf("nothing to redo\n\n");
+        }
+        return;
+    }
+    if(strcmp(inputmove, "SAVE") == 0){
+        Save(); 
+        return;
+    }
     if(strcmp(inputmove, "LOAD") == 0){
         Load();
         printBoard(current.board);
+        return;
     }
-        history[current.movesplayed] = current;
     if(strlen(inputmove) != 4){printf("Move is invalid, please enter another move\n"); return;}
     c1 = inputmove[0];
     c2 = inputmove[2];
@@ -50,6 +72,18 @@ void movement(char board[8][8]){
     int startrow = 8 - r1;
     int eatenpiece = board[destrow][destcol];
     char startpiece = board[startrow][startcol];
+    int is_ep = 0;
+    int ep_row = -1;
+    if((startpiece == 'p' || startpiece == 'P') && startcol != destcol && isempty(eatenpiece)){
+        is_ep = 1;
+        ep_row = startrow; 
+        eatenpiece = board[ep_row][destcol];
+        }
+        history[current.movesplayed] = current;
+        board[destrow][destcol] = startpiece;
+        if(is_ep){
+            board[ep_row][destcol] = (ep_row + destcol) % 2 ? '.' : '-';
+        }
     board[destrow][destcol] = board[startrow][startcol];
     if(ispromotion(board, c1, r1, c2, r2)){
         while(1){
@@ -59,17 +93,17 @@ void movement(char board[8][8]){
          if (strchr(inputprom, '\n') == NULL){clearinputbuffer();}
          cleaninput(inputprom);
          promotionpiece = inputprom[0];
-         if(turn(movesplayed) == 0){promotionpiece = tolower(promotionpiece);}
-         else if(turn(movesplayed) == 1){promotionpiece = toupper(promotionpiece);}
+         if(turn(current.movesplayed) == 0){promotionpiece = tolower(promotionpiece);}
+         else if(turn(current.movesplayed) == 1){promotionpiece = toupper(promotionpiece);}
          if(!ispromotionvalid(board, promotionpiece, startrow, startcol)){
         printf("Promotion invalid please enter another one\n");}
         else{board[destrow][destcol] = promotionpiece;
         break;}  
 }}
-    if(check(board, movesplayed)){
+    if(check(board, current.movesplayed)){
         printf("Illegal move it puts your king in check\n");
-        board[startrow][startcol] = startpiece;
-        board[destrow][destcol] = eatenpiece;
+            board[startrow][startcol] = startpiece;
+            board[destrow][destcol] = eatenpiece;
         return;
     }
     if((startcol+startrow)%2){
@@ -79,9 +113,14 @@ void movement(char board[8][8]){
         board[startrow][startcol] = '-';
     }
     if(eatenpiece != '-' && eatenpiece != '.'){eatenpieces(eatenpiece);}
+    current.enpassCol = -1;
+        if(startpiece == 'p' && (destrow - startrow) == -2) { current.enpassCol = startcol; }
+        if(startpiece == 'P' && (destrow - startrow) == 2) { current.enpassCol = startcol; }
+    current.movesplayed++;
+    undoCount = 0;
+    history[current.movesplayed] = current;
     printBoard(board);
-    movesplayed++;
-    current
+    
     }
     else{
         printf("Move is invalid, please enter another move\n");
@@ -119,29 +158,33 @@ int turn(int movesplayed){
 void undo(){
     if(current.movesplayed>0){
         current=history[current.movesplayed-1];
-        printf("undone successfully");
-    }
-    else{
-        printf("nothing to undo");
+        printf("undone successfully\n\n");
     }
 }
+void redo(){
+    current=history[current.movesplayed+1];
+    printf("redone successfully\n\n");
+}
+
 void Save(){
     FILE *save= fopen("save.txt", "wb");
     if(save==NULL)
-        printf("save failed");
+        printf("save failed\n");
         else{
             fwrite(&current, sizeof(game), 1, save);
             fclose(save);
-            printf("saved successfully");
+            printf("saved successfully\n\n");
         }
 }
 void Load(){
     FILE *load= fopen("save.txt", "rb");
     if(load==NULL)
-        printf("load failed");
+        printf("load failed\n\n");
         else{
             fread(&current, sizeof(game), 1, load);
             fclose(load);
-            printf("loaded successfully");
+            printf("loaded successfully\n\n");
         }
 }
+
+

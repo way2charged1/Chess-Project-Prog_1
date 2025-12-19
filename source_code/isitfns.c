@@ -74,9 +74,9 @@ int isvalidmove(char board[8][8], char c1, int r1, char c2, int r2, int skip){
     int rowdiff = destrow - startrow;
     int coldiff = destcol - startcol;
     if(skip == 0 && turn(current.movesplayed   )==0){whoseturn = 0;}
-    else if(skip == 0 && turn(movesplayed)==1){whoseturn =1;}
-    if( skip == 0 && iswhite(piece) && turn(movesplayed)==1){return 0;}
-    else if(skip == 0 && isblack(piece) && turn(movesplayed)==0){return 0;}
+    else if(skip == 0 && turn(current.movesplayed)==1){whoseturn =1;}
+    if( skip == 0 && iswhite(piece) && turn(current.movesplayed)==1){return 0;}
+    else if(skip == 0 && isblack(piece) && turn(current.movesplayed)==0){return 0;}
     if(startrow == destrow && startcol == destcol){return 0;}
     if(iswhite(piece) && iswhite(board[destrow][destcol])){return 0;}
     if(isblack(piece) && isblack(board[destrow][destcol])){return 0;}
@@ -86,19 +86,21 @@ int isvalidmove(char board[8][8], char c1, int r1, char c2, int r2, int skip){
      if(rowdiff == -1 && isempty(board[destrow][destcol])){return 1;}   
      if(rowdiff == -2 && startrow == 6 && isempty(board[destrow][destcol]) && isempty(board[destrow+1][destcol])){return 1;} 
      }
-     else if(abs(coldiff) == 1){
-         if(rowdiff == -1 && !isempty(board[destrow][destcol])){return 1;}
-     }
-     return 0;    
+        else if(abs(coldiff) == 1 && rowdiff == -1) {
+        if(!isempty(board[destrow][destcol])){return 1;}
+        if(destrow == 2 && destcol == current.enpassCol){return 1;}
+    }
+     return 0;
      case 'P':
      if(coldiff == 0){
      if(rowdiff == 1 && isempty(board[destrow][destcol])){return 1;}   
      if(rowdiff == 2 && startrow == 1 && isempty(board[destrow][destcol]) && isempty(board[destrow-1][destcol])){return 1;} 
      }
-     else if(abs(coldiff) == 1){
-         if(rowdiff == 1 && !isempty(board[destrow][destcol])){return 1;}
-     }
-     return 0;  
+        else if(abs(coldiff) == 1 && rowdiff == 1) {
+        if(!isempty(board[destrow][destcol])){return 1;}
+        if(destrow == 5 && destcol == current.enpassCol){return 1;}
+    }
+    return 0;
      case 'r':
      case 'R':
      if(ispathclear(board, destrow, destcol, startrow, startcol) && (rowdiff == 0 || coldiff == 0)){return 1;}
