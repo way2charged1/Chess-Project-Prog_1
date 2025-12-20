@@ -101,14 +101,7 @@ void movement(char board[8][8]){
 }}
     if(check(board, current.movesplayed)){
         printf("Illegal move it puts your king in check\n");
-            board[startrow][startcol] = startpiece;
-            if(isenpass){
-                board[destrow][destcol] = (destrow + destcol) % 2 ? '.' : '-';
-                board[enpassR][destcol] = eatenpiece;
-            }
-            else{
-                board[destrow][destcol] = eatenpiece;
-            }
+        current=history[current.movesplayed];
         return;
     }
     board[startrow][startcol] = (startcol+startrow)%2 ? '.' : '-';
