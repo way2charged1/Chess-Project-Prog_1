@@ -14,9 +14,9 @@
 #include "sidenotes.h"
   char  Wpawn = 'p', Wrook = 'r', Wknight = 'n', Wbishop = 'b', Wqueen = 'q', Wking = 'k';
   char  Bpawn = 'P', Brook = 'R', Bknight = 'N', Bbishop = 'B', Bqueen = 'Q', Bking = 'K';
-  int movesplayed = 0;
-  char whiteeaten[16], blackeaten[16], inputmove[100];
-  int whiteeatencount = 0, blackeatencount = 0;
+  char inputmove[100];
   char eatenpiece;
-  int whitewin = 0, blackwin = 0;
   char promotionpiece;
+  int undoCount=0;
+  game history[1000];
+  game current;

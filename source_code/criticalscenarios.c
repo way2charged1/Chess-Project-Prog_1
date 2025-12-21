@@ -14,7 +14,7 @@
 #include "sidenotes.h"
 
 int check(char board[8][8], int movesplayed){
-  int Krow, Kcol;
+  int Krow = -1, Kcol = -1;
   char undercheck, King;
   if(turn(movesplayed)==0){
        King = 'k';}
@@ -45,11 +45,11 @@ int check(char board[8][8], int movesplayed){
 
 int checkmate(char board[8][8]){
     char temp;
-    if(!check(board, movesplayed)){return 0;}
+    if(!check(board, current.movesplayed)){return 0;}
     for(int i =0 ; i < 8; i++){
         for(int j = 0; j < 8; j++){
-        if(iswhite(board[i][j]) && turn(movesplayed) == 1){continue;}
-        else if(isblack(board[i][j]) && turn(movesplayed) == 0){continue;}
+        if(iswhite(board[i][j]) && turn(current.movesplayed) == 1){continue;}
+        else if(isblack(board[i][j]) && turn(current.movesplayed) == 0){continue;}
         else if(isempty(board[i][j])){continue;}
         for (int r = 0; r < 8; r++){
             for (int c = 0; c < 8; c++){
@@ -62,7 +62,7 @@ int checkmate(char board[8][8]){
     else{
         board[i][j] = '-';
     }
-    if(!check(board, movesplayed)){
+    if(!check(board, current.movesplayed)){
         board[i][j] = board[r][c];
         board[r][c] = temp;
         return 0;}
@@ -74,19 +74,19 @@ int checkmate(char board[8][8]){
 }
         }
     }
- if(turn(movesplayed) == 1){whitewin = 1;}
- else if(turn(movesplayed) == 0){blackwin = 1;}  
+ if(turn(current.movesplayed) == 1){current.whitewin = 1;}
+ else if(turn(current.movesplayed) == 0){current.blackwin = 1;}  
     return 1;
 }
 
 
 int stalemate(char board[8][8]){
     char temp;
-    if(check(board, movesplayed)){return 0;}
+    if(check(board, current.movesplayed)){return 0;}
     for(int i =0 ; i < 8; i++){
         for(int j = 0; j < 8; j++){
-      if(iswhite(board[i][j]) && turn(movesplayed) == 1){continue;}
-        else if(isblack(board[i][j]) && turn(movesplayed) == 0){continue;}
+      if(iswhite(board[i][j]) && turn(current.movesplayed) == 1){continue;}
+        else if(isblack(board[i][j]) && turn(current.movesplayed) == 0){continue;}
         else if(isempty(board[i][j])){continue;}
         for (int r = 0; r < 8; r++){
             for (int c = 0; c < 8; c++){
@@ -99,7 +99,7 @@ int stalemate(char board[8][8]){
     else{
              board[i][j] = '-';
     }
-    if(!check(board, movesplayed)){
+    if(!check(board, current.movesplayed)){
         board[i][j] = board[r][c];
         board[r][c] = temp;
         return 0;}
@@ -115,10 +115,10 @@ int stalemate(char board[8][8]){
 
 int endgame(char board[8][8]){
     if(checkmate(board)){
-        if(whitewin == 1){
+        if(current.whitewin == 1){
             printf("White won! Checkmate");
             return 1;}
-        else if(blackwin == 1){
+        else if(current.blackwin == 1){
             printf("Black won! Checkmate");
             return 1;}
         }
