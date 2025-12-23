@@ -81,6 +81,7 @@ void movement(char board[8][8]){
         }
         history[current.movesplayed] = current;
         board[destrow][destcol] = startpiece;
+        board[startrow][startcol] = (startrow+startcol)%2 ? '.' : '-';
         if(isenpass){
             board[enpassR][destcol] = (enpassR + destcol) % 2 ? '.' : '-';
         }
@@ -103,9 +104,9 @@ void movement(char board[8][8]){
     if (startpiece == 'R') {
     if (startrow == 0 && startcol == 0) current.BrookmovedA = 1;
     if (startrow == 0 && startcol == 7) current.BrookmovedH = 1;
+    }
     if (startpiece == 'K') current.Bkingmoved = 1;
     if (startpiece == 'k') current.Wkingmoved = 1;
-    }
     if(ispromotion(board, c1, r1, c2, r2)){
         while(1){
         printf("Promotion What would you like to upgrade to?\nbishop(B or b), knight(N or n), queen(Q or q), rook(R or r):");
@@ -116,7 +117,7 @@ void movement(char board[8][8]){
          promotionpiece = inputprom[0];
          if(turn(current.movesplayed) == 0){promotionpiece = tolower(promotionpiece);}
          else if(turn(current.movesplayed) == 1){promotionpiece = toupper(promotionpiece);}
-         if(!ispromotionvalid(board, promotionpiece, startrow, startcol)){
+         if(!ispromotionvalid(board, promotionpiece, destrow, destcol)){
         printf("Promotion invalid please enter another one\n");}
         else{board[destrow][destcol] = promotionpiece;
         break;}  
@@ -126,7 +127,6 @@ void movement(char board[8][8]){
         current=history[current.movesplayed];
         return;
     }
-    board[startrow][startcol] = (startcol+startrow)%2 ? '.' : '-';
     if(eatenpiece != '-' && eatenpiece != '.'){eatenpieces(eatenpiece);}
     current.enpassCol = -1;
     if(startpiece == 'p' && (destrow - startrow) == -2) { current.enpassCol = startcol; }

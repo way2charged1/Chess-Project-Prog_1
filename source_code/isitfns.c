@@ -173,14 +173,12 @@ int isvalidmove(char board[8][8], char c1, int r1, char c2, int r2, int skip){
 
 int ispromotion(char board[8][8], char c1, int r1, char c2, int r2){
     int destrow = 8 - r2;
-    int startcol = c1 - 'A';
-    int startrow = 8 - r1;
-    char piece = board[startrow][startcol];
+    int destcol = c2 -'A';
+    char piece = board[destrow][destcol];
     if(piece == 'p' && iswhite(piece) && destrow == 0){return 1;}
     else if(piece == 'P' && isblack(piece) && destrow == 7){return 1;}
     return 0;
 }
-
 
 int ispromotionvalid(char board[8][8], char promotionpiece,int  startrow, int startcol){
      if(board[startrow][startcol] == 'p'){
