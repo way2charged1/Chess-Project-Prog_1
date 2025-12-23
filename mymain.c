@@ -175,6 +175,7 @@ void movement(char board[8][8]){
         }
         history[current.movesplayed] = current;
         board[destrow][destcol] = startpiece;
+        board[startrow][startcol] = (startrow+startcol)%2 ? '.' : '-';
         if(isenpass){
             board[enpassR][destcol] = (enpassR + destcol) % 2 ? '.' : '-';
         }
@@ -197,9 +198,9 @@ void movement(char board[8][8]){
     if (startpiece == 'R') {
     if (startrow == 0 && startcol == 0) current.BrookmovedA = 1;
     if (startrow == 0 && startcol == 7) current.BrookmovedH = 1;
+    }
     if (startpiece == 'K') current.Bkingmoved = 1;
     if (startpiece == 'k') current.Wkingmoved = 1;
-    }
     if(ispromotion(board, c1, r1, c2, r2)){
         while(1){
         printf("Promotion What would you like to upgrade to?\nbishop(B or b), knight(N or n), queen(Q or q), rook(R or r):");
@@ -210,7 +211,7 @@ void movement(char board[8][8]){
          promotionpiece = inputprom[0];
          if(turn(current.movesplayed) == 0){promotionpiece = tolower(promotionpiece);}
          else if(turn(current.movesplayed) == 1){promotionpiece = toupper(promotionpiece);}
-         if(!ispromotionvalid(board, promotionpiece, startrow, startcol)){
+         if(!ispromotionvalid(board, promotionpiece, destrow, destcol)){
         printf("Promotion invalid please enter another one\n");}
         else{board[destrow][destcol] = promotionpiece;
         break;}  
@@ -220,7 +221,6 @@ void movement(char board[8][8]){
         current=history[current.movesplayed];
         return;
     }
-    board[startrow][startcol] = (startcol+startrow)%2 ? '.' : '-';
     if(eatenpiece != '-' && eatenpiece != '.'){eatenpieces(eatenpiece);}
     current.enpassCol = -1;
     if(startpiece == 'p' && (destrow - startrow) == -2) { current.enpassCol = startcol; }
@@ -246,7 +246,7 @@ void clearinputbuffer(){
 void cleaninput(char* input){
     int j = 0;
     for(int i = 0; input[i] != '\0' ; i++){
-     if(input[i] != ' ' && input[i] != '\n'){
+     if(input[i] != ' ' && input[i] != '\n' && input[i] != '\r'){
    input[j] = toupper(input[i]);
    j++;}
 }
@@ -487,9 +487,8 @@ int check(char board[8][8], int movesplayed){
 
 int ispromotion(char board[8][8], char c1, int r1, char c2, int r2){
     int destrow = 8 - r2;
-    int startcol = c1 - 'A';
-    int startrow = 8 - r1;
-    char piece = board[startrow][startcol];
+    int destcol = c2 -'A';
+    char piece = board[destrow][destcol];
     if(piece == 'p' && iswhite(piece) && destrow == 0){return 1;}
     else if(piece == 'P' && isblack(piece) && destrow == 7){return 1;}
     return 0;
@@ -685,4 +684,3 @@ void undo(){
         current=history[current.movesplayed+1];
         printf("redone successfully\n\n");
     }
-
