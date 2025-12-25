@@ -121,7 +121,7 @@ void movement(char board[8][8]){
          promotionpiece = inputprom[0];
          if(turn(current.movesplayed) == 0){promotionpiece = tolower(promotionpiece);}
          else if(turn(current.movesplayed) == 1){promotionpiece = toupper(promotionpiece);}
-         if(!ispromotionvalid(board, promotionpiece, destrow, destcol)){
+         if(!ispromotionvalid(board, promotionpiece, destrow, destcol) || (strlen(inputprom) != 1)){
         printf("Promotion invalid please enter another one\n");}
         else{board[destrow][destcol] = promotionpiece;
         break;}  
